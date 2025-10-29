@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Annexe1b">
+
+    <TextView
+        android:id="@+id/question1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Nombre de lignes du fichier:" />
+
+    <TextView
+        android:id="@+id/question2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Nombre de caractères du fichier: " />
+
+    <TextView
+        android:id="@+id/question3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Nombre de &quot;c&quot; du fichier: " />
+
+</LinearLayout>
