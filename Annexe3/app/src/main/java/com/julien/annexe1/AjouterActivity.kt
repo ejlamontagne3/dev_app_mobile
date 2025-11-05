@@ -78,9 +78,8 @@ class AjouterActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
+    override fun onStop() {
+        super.onStop()
+        SingletonMemo.serialiseListe(this)
+    }
 }
