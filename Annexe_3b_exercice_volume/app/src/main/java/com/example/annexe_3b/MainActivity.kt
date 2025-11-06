@@ -10,8 +10,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
 lateinit var sonnerieBar : SeekBar
@@ -30,17 +32,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        var ec = Ecouteur()
         sonnerieBar = findViewById(R.id.sonnerieBar)
         mediaBar = findViewById(R.id.mediaBar)
         notificationsBar = findViewById(R.id.nofiticationsBar)
 
-        sonnerieBar.setOnSeekBarChangeListener(ec)
-        mediaBar.setOnSeekBarChangeListener(ec)
-        notificationsBar.setOnSeekBarChangeListener(ec)
-
-
         try {
+
+            val v = deserealiseVolume()
+            sonnerieBar.progress = v.sonnerie
+            mediaBar.progress = v.media
+            notificationsBar.progress = v.notifications
 
         }
         catch (f : FileNotFoundException){
@@ -51,29 +52,32 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    inner class Ecouteur : OnSeekBarChangeListener{
-        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                seekBar?.setProgress(progress)
+    override fun onStop() {
+        super.onStop()
 
-        }
-
-        override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-        }
-
-        override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-        }
-
+        serialiseVolume()
 
     }
 
+
     fun serialiseVolume(){
-        val fos : FileOutputStream = openFileOutput(" fichier.ser", MODE_PRIVATE)
+        val v : Volume = Volume(sonnerieBar.progress, mediaBar.progress, notificationsBar.progress)
+        val fos : FileOutputStream = openFileOutput("fichier.ser", MODE_PRIVATE)
         val oos = ObjectOutputStream (fos)
         oos.use {
-            oos.writeObject(liste)
+            oos.writeObject(v)
         }
+    }
+
+    fun deserealiseVolume() : Volume{
+
+        val fis : FileInputStream = openFileInput("fichier.ser")
+        val ois = ObjectInputStream (fis)
+        ois.use {
+            val v = ois.readObject() as Volume
+            return v
+        }
+
     }
 
 
