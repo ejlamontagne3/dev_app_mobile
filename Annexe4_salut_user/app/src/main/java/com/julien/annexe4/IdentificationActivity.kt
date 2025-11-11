@@ -18,6 +18,7 @@ class IdentificationActivity : AppCompatActivity() {
     lateinit var boutonConfirmer : Button
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

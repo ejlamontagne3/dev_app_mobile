@@ -1,8 +1,10 @@
 package com.julien.annexe4
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 lateinit var connaitreBtn : Button
 lateinit var texteSalutation : TextView
 lateinit var lanceur: ActivityResultLauncher<Intent>;
+var u: Utilisateur? = null
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+
+
         lanceur = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
             CallBackIdentification()
@@ -38,17 +43,37 @@ class MainActivity : AppCompatActivity() {
         texteSalutation = findViewById(R.id.textSalutation)
 
         connaitreBtn = findViewById(R.id.connaitreBtn)
-        connaitreBtn.setOnClickListener{ source ->
-            if (source == connaitreBtn){
+        connaitreBtn.setOnClickListener{
 
                 val intent = Intent(this, IdentificationActivity::class.java)
                 lanceur.launch(intent)
 
-            }
+
         }
+
+        //Recuperer s'il y a lieu l saveInstanceState
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            u = savedInstanceState?.getSerializable("util", Utilisateur::class.java)
+
+        }else{
+            u = savedInstanceState?.getSerializable("util") as Utilisateur
+        }
+        texteSalutation.text = "Bonjour ${u?.prenom ?: " "} ${u?.nom ?: " "}"*/
+
+
 
 
     }
+
+
+//appelé automatiquement juste avant le onStop
+/*override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+    super.onSaveInstanceState(outState, outPersistentState)
+
+    //Conserver l'utilisateur
+    outState.putSerializable("util", u)
+}*/
+
 
     inner class CallBackIdentification : ActivityResultCallback<ActivityResult> {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -57,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             //On revient ici de notre boomrang
             if (result.resultCode == RESULT_OK){
                 val intent = result.data
-                val u = intent!!.getSerializableExtra("utilisateur", Utilisateur::class.java)
+                u = intent!!.getSerializableExtra("utilisateur", Utilisateur::class.java)
                 texteSalutation.append((" ${u!!.prenom} ${u!!.nom}"))
 
             }
