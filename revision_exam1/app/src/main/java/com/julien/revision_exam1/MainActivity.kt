@@ -2,6 +2,7 @@ package com.julien.revision_exam1
 
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -54,23 +55,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lireFichier(): ArrayList<Langage>{
+        try {
+            var listeLangage: ArrayList<Langage> = ArrayList()
 
-        var listeLangage: ArrayList<Langage> = ArrayList()
+            //val fis: FileInputStream = openFileInput("langage.txt")
+            val fis = getRessources().openRawRessource(R.raw.langage)
+            val isr: InputStreamReader = InputStreamReader(fis)
+            val br: BufferedReader = BufferedReader(isr)
+            br.use {
 
-        val fis: FileInputStream = openFileInput("langage.txt")
-        val isr: InputStreamReader = InputStreamReader(fis)
-        val br: BufferedReader = BufferedReader(isr)
-        br.use {
+                br.forEachLine { ligne ->
+                    var tempListe = ligne.split(",")
+                    var l = Langage(tempListe.get(0), tempListe.get(1).toInt(), tempListe.get(2).toInt(), tempListe.get(3).toInt())
+                    listeLangage.add(l)
+                }
 
-            br.forEachLine { ligne ->
-                var tempListe = ligne.split(",")
-                var l = Langage(tempListe.get(0), tempListe.get(1).toInt(), tempListe.get(2).toInt(), tempListe.get(3).toInt())
-                listeLangage.add(l)
+                listeLangage.removeAt(0)
+                return listeLangage
             }
-
         }
-        listeLangage.removeAt(0)
-        return listeLangage
+        catch (e: Exception){
+            Toast.makeText(this, "Fichier introuvable", Toast.LENGTH_SHORT).show()
+        }
+        return ArrayList()
     }
 
     fun trouveLangage(listeLangage: ArrayList<Langage>): ArrayList<Langage>{

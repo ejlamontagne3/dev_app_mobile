@@ -1,0 +1,7 @@
+BMO, 2.25
+CIBC, 2.45
+EQ, 3
+Banquenationale, 2.5
+RBC, 2.45
+Tangerine, 2.9
+BanqueScotia, 2.45
