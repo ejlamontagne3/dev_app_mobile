@@ -1,8 +1,11 @@
 package com.julien.annexe_planete
 
+import android.icu.text.DisplayContext
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.util.Scanner
 
 lateinit var listView : ListView
 
@@ -30,6 +34,14 @@ class MainActivity : AppCompatActivity() {
         listView.adapter = adapter
 
 
+        try {
+            lireFichier()
+        }catch (e: Exception){
+            Toast.makeText(this, "Impossible d'ouvrir le fichier planète",
+                LENGTH_SHORT
+            )
+        }
+
 
     }
 
@@ -37,14 +49,19 @@ class MainActivity : AppCompatActivity() {
 
         var listePlanetes : ArrayList<String> = ArrayList()
         val fis = openFileInput("planete.txt") //ouvre le fichier
-        val isr = InputStreamReader(fis) //Crée un flux de donnée
-        val br = BufferedReader(isr) //Crée un buffer pour lire plus vite
-         br.forEachLine { ligne ->
-             listePlanetes.add(ligne)
-         }
+        val s = Scanner(fis)
+        s.useDelimiter("\\s+") //un ou plusieurs caractere blanc
+        // On lit deux par deux : nom + valeur
+        while (s.hasNext()) {
+            var mot = s.next()       // ex : "Terre"
+            if (s.hasNext()) {
+                var mot2 = s.next()  // ex : "99"
+                listePlanetes.add("$mot $mot2")
+            }
+        }
 
+        s.close()
         return listePlanetes
-
     }
 
 

@@ -12,9 +12,9 @@ import androidx.core.view.WindowInsetsCompat
 
 lateinit var ajouterBtn : Button
 lateinit var afficherBtn : Button
-lateinit var intent : Intent
-lateinit var intent2 : Intent
-lateinit var memoList : ArrayList<String>
+var intent : Intent? = null
+var intent2 : Intent? = null
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         intent = Intent(this, AjouterActivity::class.java)
         intent2 = Intent(this, AfficherActivity::class.java)
 
-        memoList = ArrayList()
+
         var ec = Ecouteur()
 
         ajouterBtn = findViewById(R.id.ajouterBtn)

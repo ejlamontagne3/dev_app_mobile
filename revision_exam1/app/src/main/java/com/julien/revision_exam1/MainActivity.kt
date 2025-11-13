@@ -12,6 +12,7 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         try {
             val dateActuel = deserealiseDate()
-            date.setText("${dateActuel.jour}  ${dateActuel.mois}  ${dateActuel.annee}")
+            date.setText(dateActuel.toString())
 
         }catch (e: Exception){
 
@@ -84,24 +85,23 @@ class MainActivity : AppCompatActivity() {
 
     fun serealiseDate(){
 
-        val dateActuel: LocalDateTime = LocalDateTime()
-        val d = Date(dateActuel.dayOfMonth, dateActuel.monthValue, dateActuel.year)
+        val dateActuel = LocalDate.now()
         val fos: FileOutputStream = openFileOutput("date.ser", MODE_PRIVATE)
         val oos: ObjectOutputStream = ObjectOutputStream(fos)
         oos.use {
-            oos.writeObject(d)
+            oos.writeObject(dateActuel)
         }
 
 
 
     }
 
-    fun deserealiseDate(): Date{
+    fun deserealiseDate(): LocalDate{
 
         val fis: FileInputStream = openFileInput("date.ser")
         val ois: ObjectInputStream = ObjectInputStream(fis)
         ois.use {
-            val d = ois.readObject() as Date
+            val d = ois.readObject() as LocalDate
             return d
         }
 
