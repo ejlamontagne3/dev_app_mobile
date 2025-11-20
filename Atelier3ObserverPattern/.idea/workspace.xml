@@ -5,32 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b9590fd-8242-4f2d-a01a-fe1b64e933b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/AndroidProjectSystem.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/kotlinc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/migrations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../atelier_2/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/AndroidProjectSystem.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/kotlinc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/migrations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/app/src/main/java/com/julien/pratique_klaxon/Record.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pratique_klaxon/app/src/main/java/com/julien/pratique_klaxon/Ville.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/Modele.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/ObervateurChangement.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/Sujet.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/res/layout/simple_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../annexe5_simpleAdapteur/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../annexe5_simpleAdapteur/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../annexe5_simpleAdapteur/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../annexe5_simpleAdapteur/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tp_musique/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tp_musique/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/ListeMusique.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/ListeMusique.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/java/com/julien/tp_musique/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tp_musique/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tp_musique/app/src/main/res/layout/activity_main.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,27 +31,27 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="35i5WVdVHvkyZOc9H5I0Dy1RWfd" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/travail/dev_app_mobile/Atelier3ObserverPattern"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/travail/dev_app_mobile/Atelier3ObserverPattern&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

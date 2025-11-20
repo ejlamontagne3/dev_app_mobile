@@ -1,21 +1,24 @@
 package com.julien.tp_musique
 
+import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.SimpleAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.beust.klaxon.Klaxon
+import com.bumptech.glide.Glide
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ObservateurChangement {
 
-    //var maMusique : ListeMusique? = null
+    lateinit var listViewChanson : ListView
+
+    var leModele: Sujet? = null
+    var v:ArrayList<HashMap<String, Any>> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,29 +29,54 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        listViewChanson = findViewById(R.id.listViewChanson)
 
-        // Crée la queue de requete
-        val queue = Volley.newRequestQueue(this)
-        val url = "https://api.jsonbin.io/v3/b/680a6a1d8561e97a5006b822?meta=false"
-
-        // notre requete demande une string au server
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            {response ->
-                var maMusique : ListeMusique = Klaxon().parse<ListeMusique>(response) ?: ListeMusique()
-                Toast.makeText(this, maMusique!!.music.size.toString(), Toast.LENGTH_SHORT).show()
-
-            },
-            Response.ErrorListener { Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()  })
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest)
-
-        //var nombreChason : Int = lire(maMusique)
     }
 
-   /* fun lire(liste : ListeMusique?): Int{
-        return maMusique!!.music!!.size
-    }*/
+    fun remplirListe(liste : ListeMusique): ArrayList<HashMap<String, Any>>{
 
+        var listeDonnees = ArrayList<HashMap<String, Any>>()
+        var chanson = HashMap<String, Any>()
+
+        for (i in 0..liste.music.size-1){
+            chanson = HashMap()
+            //chanson.put("id", liste.music.get(i).id)
+            chanson.put("title", liste.music.get(i).title)
+            //chanson.put("album", liste.music.get(i).album)
+            chanson.put("artist", liste.music.get(i).artist)
+            //chanson.put("genre", liste.music.get(i).genre)
+            //chanson.put("source", liste.music.get(i).source)
+            chanson.put("image", liste.music.get(i).image)
+            //chanson.put("trackNumber", liste.music.get(i).trackNumber)
+            //chanson.put("totalTrackCount", liste.music.get(i).totalTrackCount)
+            //chanson.put("duration", liste.music.get(i).duration)
+            //chanson.put("site", liste.music.get(i).site)
+
+            listeDonnees.add(chanson)
+
+        }
+
+        return listeDonnees
+    }
+
+    inner class MonAdapter (context: Context, data: List<Map<String, Any>>, resource: Int, from: Array<String>, to: IntArray) :SimpleAdapter( context,data, resource, from, to ){
+        @Override
+        override fun setViewImage (v: ImageView, value:String){
+            Glide.with(this@MainActivity).load(value).into(v);
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        leModele = Modele(this@MainActivity)
+        (leModele as Modele).ajouterObservateur(this) // on ajouter l'observateur ( l'activité ) au modèle ( le sujet )
+    }
+
+    override fun changement(musiqueRecu: ListeMusique?) {
+        v = remplirListe(musiqueRecu!!)
+        val adapter = MonAdapter(this, v, R.layout.simple_item, arrayOf("title", "artist", "image"), intArrayOf(R.id.titleLabel, R.id.artistLabel, R.id.imageLabel))
+
+        listViewChanson.adapter = adapter
+    }
 }

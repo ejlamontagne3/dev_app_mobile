@@ -1,5 +1,5 @@
 package com.julien.tp_musique
 
-class ListeMusique () {
+class ListeMusique() {
     var music : List<Musique> = emptyList()
 }
