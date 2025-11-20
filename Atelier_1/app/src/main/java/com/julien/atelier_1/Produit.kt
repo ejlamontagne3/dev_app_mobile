@@ -1,5 +1,5 @@
 package com.julien.atelier_1
 
-data class Produit ( val nom : Produit, var prix :String){
+data class Produit ( val nom : String, var prix :String){
 
 }

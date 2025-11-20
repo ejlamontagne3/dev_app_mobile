@@ -15,7 +15,7 @@ import com.beust.klaxon.Klaxon
 
 class MainActivity : AppCompatActivity() {
 
-    var maMusique : ListeMusique? = null
+    //var maMusique : ListeMusique? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             {response ->
-                maMusique = Klaxon().parse<ListeMusique>(response) ?: ListeMusique()
+                var maMusique : ListeMusique = Klaxon().parse<ListeMusique>(response) ?: ListeMusique()
                 Toast.makeText(this, maMusique!!.music.size.toString(), Toast.LENGTH_SHORT).show()
 
             },
@@ -44,11 +44,11 @@ class MainActivity : AppCompatActivity() {
 // Add the request to the RequestQueue.
         queue.add(stringRequest)
 
-        var nombreChason : Int = lire(maMusique)
+        //var nombreChason : Int = lire(maMusique)
     }
 
-    fun lire(liste : ListeMusique?): Int{
+   /* fun lire(liste : ListeMusique?): Int{
         return maMusique!!.music!!.size
-    }
+    }*/
 
 }
