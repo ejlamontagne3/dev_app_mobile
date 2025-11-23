@@ -1,5 +1,7 @@
 package com.julien.tp_musique
 
-class ListeMusique() {
+import java.io.Serializable
+
+class ListeMusique {
     var music : List<Musique> = emptyList()
 }

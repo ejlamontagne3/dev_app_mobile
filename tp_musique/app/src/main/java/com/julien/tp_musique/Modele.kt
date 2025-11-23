@@ -1,7 +1,6 @@
 package com.julien.tp_musique
 
 import android.content.Context
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -11,6 +10,7 @@ import com.beust.klaxon.Klaxon
 class Modele (context: Context) : Sujet  {
 
     private var maMusique : ListeMusique? = null
+    private var appuyerBoutonPlay : Boolean = false
     private var obs: ObservateurChangement? = null // c'est un observateur, il pourrait en avoir plusieurs
 
     // constructeur unique
@@ -33,18 +33,48 @@ class Modele (context: Context) : Sujet  {
         queue.add(stringRequest)
     }
 
+    fun jouerChanson(context : Context, chanson : Musique){
+        // Crée la queue de requete
+        val queue = Volley.newRequestQueue(context)
+        val url = chanson.source
+
+        // notre requete demande une string au server
+        val stringRequest = StringRequest(Request.Method.GET, url,
+            {
+                    response ->
+                    setAppuyerBoutonPlay()
+            },
+            { })
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest)
+    }
+
     fun getMaMusique(): ListeMusique? {
         return maMusique
     }
-
-
     fun setMaMusique(maMusique: ListeMusique) {
         this.maMusique = maMusique
         //changement de l'état du sujet, avertir les observateurs
         avertirObservateurs()
     }
 
+    fun getAppuyerBoutonPlay(): Boolean {
+        return appuyerBoutonPlay
+    }
+
+    fun setAppuyerBoutonPlay() {
+        if (appuyerBoutonPlay){
+            this.appuyerBoutonPlay = false
+        }else{
+            this.appuyerBoutonPlay = true
+        }
+        //changement de l'état du sujet, avertir les observateurs
+        avertirObservateurs()
+    }
+
     // méthodes de l'interface Sujet
+
     override fun ajouterObservateur(obs: ObservateurChangement) {
         this.obs = obs
     }
@@ -55,6 +85,6 @@ class Modele (context: Context) : Sujet  {
     }
 
     override fun avertirObservateurs() {
-        obs!!.changement(maMusique) // important
+        obs!!.changement(maMusique, appuyerBoutonPlay) // important
     }
 }
