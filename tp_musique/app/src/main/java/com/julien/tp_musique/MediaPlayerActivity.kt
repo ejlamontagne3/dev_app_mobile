@@ -11,13 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
 
 class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
-    var leModele: Sujet? = null
     var chanson : Musique? = null
     var position : Int = -1
     var estBoutonPlayAppuye = false
@@ -26,9 +26,13 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     lateinit var playBtn : Button
     lateinit var suivantBtn : Button
     lateinit var precedantBtn : Button
+    lateinit var plusBtn : Button
+    lateinit var moinsBtn : Button
 
     lateinit var maxSeekBar : TextView
     lateinit var duree : TextView
+    lateinit var champArtiste : TextView
+    lateinit var champChanson : TextView
     lateinit var seekBar: SeekBar
     var ec : Ecouteur? = null
     var minuterie: Minuterie? = null
@@ -46,8 +50,12 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         }
         suivantBtn = findViewById(R.id.suivantBtn)
         precedantBtn = findViewById(R.id.precedantBtn)
+        moinsBtn = findViewById(R.id.moinsBtn)
+        plusBtn = findViewById(R.id.plusBtn)
         playBtn = findViewById(R.id.playBtn)
         duree = findViewById(R.id.duree)
+        champArtiste = findViewById(R.id.champArtiste)
+        champChanson = findViewById(R.id.champChanson)
         maxSeekBar = findViewById(R.id.maxSeekBar)
         seekBar = findViewById(R.id.seekBar)
         playerView = findViewById(R.id.playerView)
@@ -67,12 +75,50 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         playBtn.setOnClickListener(ec)
         suivantBtn.setOnClickListener(ec)
         precedantBtn.setOnClickListener(ec)
+        plusBtn.setOnClickListener(ec)
+        moinsBtn.setOnClickListener(ec)
         //seekBar.setOnSeekBarChangeListener(ec)
 
 
         seekBar.max = chanson!!.duration
         maxSeekBar.setText(seekBar.max.toString())
         tempsRestant = chanson!!.duration
+    }
+
+    fun desactiveBtn(){
+
+        suivantBtn.isEnabled = false
+        precedantBtn.isEnabled = false
+        playBtn.isEnabled = false
+        plusBtn.isEnabled = false
+        moinsBtn.isEnabled = false
+    }
+
+    fun activeBtn(){
+        suivantBtn.isEnabled = true
+        precedantBtn.isEnabled = true
+        playBtn.isEnabled = true
+        moinsBtn.isEnabled = true
+        plusBtn.isEnabled = true
+    }
+
+    fun nouvelleChanson(){
+        chanson = SingletonListeMusique.singletonListe.get(position)
+        seekBar.progress = 0
+        player!!.seekTo(position, 0)
+        player!!.play()
+        minuterie!!.cancel()
+        minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
+        minuterie!!.start()
+        seekBar.max = chanson!!.duration
+        maxSeekBar.text = chanson!!.duration.toString()
+        champChanson.text = chanson!!.title
+        champArtiste.text = chanson!!.artist
+    }
+
+    fun mettreSurPause(){
+        playBtn.text = "Pause"
+        estBoutonPlayAppuye = true
     }
 
     inner class Ecouteur : View.OnClickListener{
@@ -84,110 +130,105 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                     playBtn.text = "Play"
                     player!!.pause()
                     minuterie!!.cancel()
-                    playBtn.isEnabled = true
                     estBoutonPlayAppuye = false
                 }else{
-                    playBtn.text = "Pause"
+                    mettreSurPause()
                     player!!.play()
                     minuterie = Minuterie((tempsRestant*1000).toLong(), 1000)
                     minuterie!!.start()
                     maxSeekBar.text = seekBar.max.toString()
-                    playBtn.isEnabled = true
-                    estBoutonPlayAppuye = true
+
                 }
+
+                playBtn.isEnabled = true
             }
             if (source == suivantBtn){
-                suivantBtn.isEnabled = false
-                precedantBtn.isEnabled = false
-                playBtn.isEnabled = false
+                desactiveBtn()
                 position++
-                playBtn.setText("Pause")
-                estBoutonPlayAppuye = true
-                seekBar.progress = 0
+                mettreSurPause()
 
-                if (position > SingletonListeMusique.singletonListe.size){
+                if (position > SingletonListeMusique.singletonListe.size-1){
                     //On remet ca au debut de la playlist
                     position = 0
                 }
 
-                player!!.seekTo(position, 0)
-                player!!.play()
-                minuterie!!.cancel()
-                minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
-                minuterie!!.start()
-                seekBar.max = chanson!!.duration
-                suivantBtn.isEnabled = true
-                precedantBtn.isEnabled = true
-                playBtn.isEnabled = true
+                nouvelleChanson()
+                activeBtn()
             }
             if (source == precedantBtn){
-                suivantBtn.isEnabled = false
-                precedantBtn.isEnabled = false
-                playBtn.isEnabled = false
+                desactiveBtn()
                 position--
-                playBtn.setText("Pause")
-                estBoutonPlayAppuye = true
-                seekBar.progress = 0
+                mettreSurPause()
 
-                if (position < SingletonListeMusique.singletonListe.size){
+                if (position < 0){
                     //On reste a la premiere chanson de la playlist
                     position = 0
                 }
 
-                player!!.seekTo(position, 0)
-                player!!.play()
-                minuterie!!.cancel()
-                minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
-                minuterie!!.start()
-                seekBar.max = chanson!!.duration
-                suivantBtn.isEnabled = true
-                precedantBtn.isEnabled = true
-                playBtn.isEnabled = true
+                nouvelleChanson()
+                activeBtn()
             }
+            if (source == plusBtn){
+                desactiveBtn()
+                if (tempsChanson +10 >= chanson!!.duration){
+                    minuterie!!.onFinish()
+                }
+                    tempsRestant -= 10
+                    minuterie!!.cancel()
+                    minuterie = Minuterie(((tempsRestant*1000).toLong()), 1000)
+                    minuterie!!.start()
+                    player!!.seekTo(player!!.currentPosition + 10_000)
+                    seekBar.progress = tempsChanson
+                    duree.text = seekBar.progress.toString()
+
+
+                activeBtn()
+            }
+            if (source == moinsBtn){
+                desactiveBtn()
+                if (tempsChanson -10 <= 0){
+                    tempsRestant = chanson!!.duration
+                    minuterie!!.cancel()
+                    minuterie = Minuterie(((tempsRestant*1000).toLong()), 1000)
+                    minuterie!!.start()
+                    player!!.seekTo(0)
+                    seekBar.progress = tempsChanson
+                    duree.text = seekBar.progress.toString()
+                }else{
+                    tempsRestant += 10
+                    minuterie!!.cancel()
+                    minuterie = Minuterie(((tempsRestant*1000).toLong()), 1000)
+                    minuterie!!.start()
+                    player!!.seekTo(player!!.currentPosition - 10_000)
+                    seekBar.progress = tempsChanson
+                    duree.text = seekBar.progress.toString()
+                }
+
+                activeBtn()
+            }
+
         }
 
-        /*override fun onProgressChanged(
-            p0: SeekBar?,
-            p1: Int,
-            p2: Boolean
-        ) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onStartTrackingTouch(p0: SeekBar?) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onStopTrackingTouch(p0: SeekBar?) {
-            TODO("Not yet implemented")
-        }*/
     }
 
     inner class Minuterie(dureeChanson : Long, appel: Long) : CountDownTimer(dureeChanson, appel) {
         override fun onFinish() {
-            suivantBtn.isEnabled = false
-            precedantBtn.isEnabled = false
-            playBtn.isEnabled = false
+            desactiveBtn()
             position++
-            playBtn.text = "Pause"
-            estBoutonPlayAppuye = true
+            mettreSurPause()
 
             if (position > SingletonListeMusique.singletonListe.size-1){
                 position = 0
             }
-            player!!.seekTo(position, 0)
-            player!!.play()
-            minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
-            seekBar.progress = chanson!!.duration
-            suivantBtn.isEnabled = true
-            precedantBtn.isEnabled = true
-            playBtn.isEnabled = true
+            nouvelleChanson()
+            activeBtn()
 
         }
 
         override fun onTick(temps: Long) {
-            tempsRestant = (temps /1000).toInt()
+
             tempsChanson = (player?.currentPosition!!/1000).toInt()
+            tempsRestant = chanson!!.duration - tempsChanson
             seekBar.progress = tempsChanson
             duree.text = tempsChanson.toString()
         }
@@ -199,10 +240,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
     override fun onStart() {
         super.onStart()
-
-        leModele = Modele(this)
-        (leModele as Modele).ajouterObservateur(this) // on ajouter l'observateur ( l'activité ) au modèle ( le sujet )
-
+        chanson = SingletonListeMusique.singletonListe.get(position)
         playerView.player = player
 
         //On ajoute toutes les chansons au player
@@ -214,12 +252,16 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
         player?.prepare()
         player?.seekTo(position, 0)
-        //titleMediaLabel.setText(chanson!!.title)
+        champChanson.text = chanson!!.title
+        champArtiste.text = chanson!!.artist
+        mettreSurPause()
+        player!!.play()
+        minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
+        minuterie!!.start()
+        seekBar.max = chanson!!.duration
+        maxSeekBar.text = chanson!!.duration.toString()
     }
 
-    /*override fun changement(musiqueRecu: ListeMusique?, estBoutonPlayAppuye: Boolean) {
-
-    }*/
 
 
 }
