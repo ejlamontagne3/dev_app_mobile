@@ -16,11 +16,12 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.beust.klaxon.Klaxon
+import kotlin.collections.plusAssign
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var listView : ListView
-    var listeAdapter : ArrayList<HashMap<String, String>>? = null
+    var listeAdapter : ArrayList<HashMap<String, Any>>? = null
     var listeVille : ListeVille? = null
 
 
@@ -43,16 +44,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun creerListe(liste: ListeVille): ArrayList<HashMap<String, String>> {
+    fun creerListe(liste: ListeVille): ArrayList<HashMap<String, Any>> {
+        var total = 0
+        for (ville in liste.record){
+            total += ville.population
+        }
 
-        val listeHashmap = ArrayList<HashMap<String, String>>()
+        val listeHashmap = ArrayList<HashMap<String, Any>>()
 
         for (ville in liste.record) {
 
-            val hashMap = HashMap<String, String>()
+            val hashMap = HashMap<String, Any>()
 
             hashMap["ville"] = ville.ville
             hashMap["population"] = ville.population.toString()
+            hashMap["pourcentage"] = ((ville.population*100)/total)
 
             listeHashmap.add(hashMap)
         }
@@ -73,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 if (listeVille!!.record.isNotEmpty()){
 
                     listeAdapter = creerListe(listeVille!!)
-                    val adapter = SimpleAdapter(this, listeAdapter, R.layout.simple_item, arrayOf("ville", "population"), intArrayOf(R.id.champNom, R.id.champReponse))
+                    val adapter = SimpleAdapter(this, listeAdapter, R.layout.simple_item, arrayOf("ville", "population", "pourcentage"), intArrayOf(R.id.champNom, R.id.champReponse, R.id.champPourcentage))
                     listView.adapter = adapter
                 }
             },
