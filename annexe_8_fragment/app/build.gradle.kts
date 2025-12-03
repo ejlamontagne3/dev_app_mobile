@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.julien.annexe_8"
+    namespace = "com.julien.annexe_8_animation"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.julien.annexe_8"
+        applicationId = "com.julien.annexe_8_animation"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

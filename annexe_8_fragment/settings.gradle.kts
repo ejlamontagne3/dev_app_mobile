@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "annexe_8"
+rootProject.name = "annexe_8_animation"
 include(":app")
  
