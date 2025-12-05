@@ -33,42 +33,11 @@ class Modele (context: Context) : Sujet  {
         queue.add(stringRequest)
     }
 
-    fun jouerChanson(context : Context, chanson : Musique){
-        // Crée la queue de requete
-        val queue = Volley.newRequestQueue(context)
-        val url = chanson.source
-
-        // notre requete demande une string au server
-        val stringRequest = StringRequest(Request.Method.GET, url,
-            {
-                    response ->
-                    setAppuyerBoutonPlay()
-            },
-            { })
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest)
-    }
-
     fun getMaMusique(): ListeMusique? {
         return maMusique
     }
     fun setMaMusique(maMusique: ListeMusique) {
         this.maMusique = maMusique
-        //changement de l'état du sujet, avertir les observateurs
-        avertirObservateurs()
-    }
-
-    fun getAppuyerBoutonPlay(): Boolean {
-        return appuyerBoutonPlay
-    }
-
-    fun setAppuyerBoutonPlay() {
-        if (appuyerBoutonPlay){
-            this.appuyerBoutonPlay = false
-        }else{
-            this.appuyerBoutonPlay = true
-        }
         //changement de l'état du sujet, avertir les observateurs
         avertirObservateurs()
     }

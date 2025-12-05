@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="neo_black">#0A0F1F</color>
+    <color name="neo_blue">#3D5AFE</color>
+    <color name="neo_pink">#FF2DAF</color>
+    <color name="neo_cyan">#00E5FF</color>
+    <color name="neo_white">#E3F2FD</color>
 </resources>

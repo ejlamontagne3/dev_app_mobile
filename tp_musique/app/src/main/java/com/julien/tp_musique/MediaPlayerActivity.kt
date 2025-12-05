@@ -1,9 +1,12 @@
 package com.julien.tp_musique
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -23,11 +26,11 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     var estBoutonPlayAppuye = false
     var player : ExoPlayer? = null
     lateinit var playerView : PlayerView
-    lateinit var playBtn : Button
-    lateinit var suivantBtn : Button
-    lateinit var precedantBtn : Button
-    lateinit var plusBtn : Button
-    lateinit var moinsBtn : Button
+    lateinit var playBtn : ImageButton
+    lateinit var suivantBtn : ImageButton
+    lateinit var precedantBtn : ImageButton
+    lateinit var plusBtn : ImageButton
+    lateinit var moinsBtn : ImageButton
 
     lateinit var maxSeekBar : TextView
     lateinit var duree : TextView
@@ -77,6 +80,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         precedantBtn.setOnClickListener(ec)
         plusBtn.setOnClickListener(ec)
         moinsBtn.setOnClickListener(ec)
+        champArtiste.setOnClickListener(ec)
         //seekBar.setOnSeekBarChangeListener(ec)
 
 
@@ -117,7 +121,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     }
 
     fun mettreSurPause(){
-        playBtn.text = "Pause"
+        playBtn.setImageResource(R.drawable.baseline_pause_24)
         estBoutonPlayAppuye = true
     }
 
@@ -127,7 +131,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 source.isEnabled = false
 
                 if (estBoutonPlayAppuye){
-                    playBtn.text = "Play"
+                    playBtn.setImageResource(R.drawable.baseline_play_arrow_24)
                     player!!.pause()
                     minuterie!!.cancel()
                     estBoutonPlayAppuye = false
@@ -142,7 +146,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
                 playBtn.isEnabled = true
             }
-            if (source == suivantBtn){
+            else if (source == suivantBtn){
                 desactiveBtn()
                 position++
                 mettreSurPause()
@@ -155,7 +159,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 nouvelleChanson()
                 activeBtn()
             }
-            if (source == precedantBtn){
+            else if (source == precedantBtn){
                 desactiveBtn()
                 position--
                 mettreSurPause()
@@ -168,7 +172,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 nouvelleChanson()
                 activeBtn()
             }
-            if (source == plusBtn){
+            else if (source == plusBtn){
                 desactiveBtn()
                 if (tempsChanson +10 >= chanson!!.duration){
                     minuterie!!.onFinish()
@@ -184,7 +188,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
                 activeBtn()
             }
-            if (source == moinsBtn){
+            else if (source == moinsBtn){
                 desactiveBtn()
                 if (tempsChanson -10 <= 0){
                     tempsRestant = chanson!!.duration
@@ -205,6 +209,10 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 }
 
                 activeBtn()
+            }
+            else if (source == champArtiste){
+                val i = Intent( Intent.ACTION_VIEW, Uri.parse(chanson?.site))
+                startActivity(i)
             }
 
         }
@@ -262,6 +270,11 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         maxSeekBar.text = chanson!!.duration.toString()
     }
 
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        minuterie?.cancel()
+        minuterie = null
+        player?.release()
+        player = null
+    }
 }

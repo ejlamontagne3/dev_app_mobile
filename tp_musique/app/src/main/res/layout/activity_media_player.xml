@@ -52,23 +52,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="11"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
-                <Button
+                <ImageButton
                     android:id="@+id/moinsBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="bottom|center"
                     android:layout_weight="1"
-                    android:text="-10sec" />
+                    android:src="@drawable/baseline_replay_10_24"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/neo_cyan" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/plusBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="bottom|center"
                     android:layout_weight="1"
-                    android:text="+10sec" />
+                    android:src="@drawable/baseline_forward_10_24"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/neo_cyan" />
             </LinearLayout>
 
             <LinearLayout
@@ -113,37 +118,43 @@
                 android:gravity="center|top"
                 android:orientation="horizontal">
 
-                <Button
+                <ImageButton
                     android:id="@+id/precedantBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25sp"
                     android:layout_weight="1"
-                    android:text="Previous" />
+                    android:src="@drawable/baseline_skip_previous_24"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/neo_cyan" />
 
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/playBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play" />
+                    android:src="@drawable/baseline_play_arrow_24"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/neo_cyan" />
 
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/suivantBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="25sp"
                     android:layout_weight="1"
-                    android:text="Next" />
+                    android:src="@drawable/baseline_skip_next_24"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/neo_cyan" />
 
             </LinearLayout>
 
