@@ -17,6 +17,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 
 
 class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
@@ -240,15 +244,57 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
             seekBar.progress = tempsChanson
             duree.text = tempsChanson.toString()
         }
+    }
 
+    fun serealiserChanson(){
+        val e = EtatChanson(chanson!!.title, (player?.currentPosition!!/1000).toInt())
+        val fos : FileOutputStream = openFileOutput("chanson.ser", MODE_PRIVATE)
+        val oos = ObjectOutputStream (fos)
+        oos.use {
+            oos.writeObject(e)
+        }
+    }
 
+    fun deserealiseChanson() : EtatChanson {
+
+        val fis: FileInputStream = openFileInput("chanson.ser")
+        val ois = ObjectInputStream(fis)
+        ois.use {
+            val e = ois.readObject() as EtatChanson
+            return e
+        }
     }
 
 
 
     override fun onStart() {
         super.onStart()
-        chanson = SingletonListeMusique.singletonListe.get(position)
+
+        try {
+            val e = deserealiseChanson()
+            var index = 0
+            for (chanson in SingletonListeMusique.singletonListe){
+                if (chanson.title == e.titre){
+                    break
+                }
+                index += 1
+            }
+            //ca veut dire quon veut reprendre la chanson la où on était rendu
+            if (position == index){
+                this.chanson = SingletonListeMusique.singletonListe.get(position)
+                tempsChanson = e.position
+                tempsRestant = chanson!!.duration - tempsChanson
+            }else{
+                chanson = SingletonListeMusique.singletonListe.get(position)
+            }
+
+        }
+        catch (e : Exception){
+
+            chanson = SingletonListeMusique.singletonListe.get(position)
+
+        }
+
         playerView.player = player
 
         //On ajoute toutes les chansons au player
@@ -263,15 +309,30 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         champChanson.text = chanson!!.title
         champArtiste.text = chanson!!.artist
         mettreSurPause()
-        player!!.play()
-        minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
-        minuterie!!.start()
-        seekBar.max = chanson!!.duration
-        maxSeekBar.text = chanson!!.duration.toString()
+
+        if (tempsRestant < chanson!!.duration){
+            player!!.seekTo((tempsChanson*1000).toLong())
+            player!!.play()
+            minuterie = Minuterie((tempsRestant*1000).toLong(), 1000)
+            minuterie!!.start()
+            seekBar.max = tempsRestant
+            duree.text = (player!!.currentPosition/1000).toString()
+            maxSeekBar.text = chanson!!.duration.toString()
+            seekBar.progress = (player!!.currentPosition/1000).toInt()
+        }else{
+            player!!.play()
+            minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
+            minuterie!!.start()
+            seekBar.max = chanson!!.duration
+            maxSeekBar.text = chanson!!.duration.toString()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        serealiserChanson()
+
         minuterie?.cancel()
         minuterie = null
         player?.release()
