@@ -15,7 +15,14 @@
         android:theme="@style/Theme.MyMusicApp"
         tools:targetApi="31">
         <activity
+            android:name=".IdentificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RatingActivity"
+            android:exported="false" />
+        <activity
             android:name=".MediaPlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

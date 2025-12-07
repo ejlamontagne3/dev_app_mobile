@@ -7,8 +7,10 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -35,7 +37,6 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     lateinit var precedantBtn : ImageButton
     lateinit var plusBtn : ImageButton
     lateinit var moinsBtn : ImageButton
-
     lateinit var maxSeekBar : TextView
     lateinit var duree : TextView
     lateinit var champArtiste : TextView
@@ -45,6 +46,11 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     var minuterie: Minuterie? = null
     var tempsChanson: Int = 0
     var tempsRestant: Int = 0
+    var listeParIndex: ArrayList<Int>? = null
+    var indexLecture: Int? = null
+
+    lateinit var artisteLayout: LinearLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +61,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        artisteLayout = findViewById(R.id.artisteLayout)
         suivantBtn = findViewById(R.id.suivantBtn)
         precedantBtn = findViewById(R.id.precedantBtn)
         moinsBtn = findViewById(R.id.moinsBtn)
@@ -68,13 +75,19 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         playerView = findViewById(R.id.playerView)
         playerView.setUseController(false)
 
+        listeParIndex = ArrayList()
+
         ec = Ecouteur()
 
         player = ExoPlayer.Builder(this).build()
         position = intent.getIntExtra("chanson", -1)
+        listeParIndex = intent.getIntegerArrayListExtra("listeIndex")
+
 
         if (position != -1){
-            chanson = SingletonListeMusique.singletonListe.get(position)
+            //On va chercher la chanson choisi par rapport au filtre "genre"
+            indexLecture = listeParIndex!!.get(position)
+            chanson = SingletonListeMusique.singletonListe.get(indexLecture!!)
         }else{
             finish()
         }
@@ -84,8 +97,8 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         precedantBtn.setOnClickListener(ec)
         plusBtn.setOnClickListener(ec)
         moinsBtn.setOnClickListener(ec)
-        champArtiste.setOnClickListener(ec)
-        //seekBar.setOnSeekBarChangeListener(ec)
+        artisteLayout.setOnClickListener(ec)
+        seekBar.setOnSeekBarChangeListener(ec)
 
 
         seekBar.max = chanson!!.duration
@@ -111,9 +124,9 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     }
 
     fun nouvelleChanson(){
-        chanson = SingletonListeMusique.singletonListe.get(position)
+        chanson = SingletonListeMusique.singletonListe.get(indexLecture!!)
         seekBar.progress = 0
-        player!!.seekTo(position, 0)
+        player!!.seekTo(indexLecture!!, 0)
         player!!.play()
         minuterie!!.cancel()
         minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
@@ -129,7 +142,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         estBoutonPlayAppuye = true
     }
 
-    inner class Ecouteur : View.OnClickListener{
+    inner class Ecouteur : View.OnClickListener, SeekBar.OnSeekBarChangeListener{
         override fun onClick(source: View?) {
             if (source == playBtn){
                 source.isEnabled = false
@@ -155,9 +168,12 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 position++
                 mettreSurPause()
 
-                if (position > SingletonListeMusique.singletonListe.size-1){
+                if (position > listeParIndex!!.size-1){
                     //On remet ca au debut de la playlist
                     position = 0
+                    indexLecture = listeParIndex?.get(position)
+                }else{
+                    indexLecture = listeParIndex?.get(position)
                 }
 
                 nouvelleChanson()
@@ -171,6 +187,9 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 if (position < 0){
                     //On reste a la premiere chanson de la playlist
                     position = 0
+                    indexLecture = listeParIndex?.get(position)
+                }else{
+                    indexLecture = listeParIndex?.get(position)
                 }
 
                 nouvelleChanson()
@@ -180,7 +199,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 desactiveBtn()
                 if (tempsChanson +10 >= chanson!!.duration){
                     minuterie!!.onFinish()
-                }
+                }else{
                     tempsRestant -= 10
                     minuterie!!.cancel()
                     minuterie = Minuterie(((tempsRestant*1000).toLong()), 1000)
@@ -188,7 +207,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                     player!!.seekTo(player!!.currentPosition + 10_000)
                     seekBar.progress = tempsChanson
                     duree.text = seekBar.progress.toString()
-
+                }
 
                 activeBtn()
             }
@@ -214,10 +233,36 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
 
                 activeBtn()
             }
-            else if (source == champArtiste){
+            else if (source == artisteLayout){
                 val i = Intent( Intent.ACTION_VIEW, Uri.parse(chanson?.site))
                 startActivity(i)
             }
+
+        }
+
+        override fun onProgressChanged(
+            source: SeekBar?,
+            value: Int,
+            fromUser: Boolean
+        ) {
+            if (fromUser){
+                minuterie?.cancel()
+                duree.setText(value.toString())
+                tempsChanson = value
+                tempsRestant = chanson!!.duration - value
+                player?.seekTo( (value*1000).toLong() )
+                minuterie = Minuterie((tempsRestant*1000).toLong(), 1000)
+                minuterie?.start()
+                player?.play()
+            }
+
+        }
+
+        override fun onStartTrackingTouch(p0: SeekBar?) {
+
+        }
+
+        override fun onStopTrackingTouch(p0: SeekBar?) {
 
         }
 
@@ -229,8 +274,11 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
             position++
             mettreSurPause()
 
-            if (position > SingletonListeMusique.singletonListe.size-1){
+            if (position > listeParIndex!!.size-1){
                 position = 0
+                indexLecture = listeParIndex?.get(position)
+            }else{
+                indexLecture = listeParIndex?.get(position)
             }
             nouvelleChanson()
             activeBtn()
@@ -247,7 +295,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
     }
 
     fun serealiserChanson(){
-        val e = EtatChanson(chanson!!.title, (player?.currentPosition!!/1000).toInt())
+        val e = EtatChanson(chanson!!.title, (player!!.currentPosition/1000).toInt())
         val fos : FileOutputStream = openFileOutput("chanson.ser", MODE_PRIVATE)
         val oos = ObjectOutputStream (fos)
         oos.use {
@@ -273,6 +321,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         try {
             val e = deserealiseChanson()
             var index = 0
+            //On recherche l'index de la derniere chanson joué
             for (chanson in SingletonListeMusique.singletonListe){
                 if (chanson.title == e.titre){
                     break
@@ -280,18 +329,18 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
                 index += 1
             }
             //ca veut dire quon veut reprendre la chanson la où on était rendu
-            if (position == index){
-                this.chanson = SingletonListeMusique.singletonListe.get(position)
-                tempsChanson = e.position
+            if (indexLecture == index){
+                this.chanson = SingletonListeMusique.singletonListe.get(indexLecture!!)
+                tempsChanson = e.tempsLectureActuel
                 tempsRestant = chanson!!.duration - tempsChanson
             }else{
-                chanson = SingletonListeMusique.singletonListe.get(position)
+                chanson = SingletonListeMusique.singletonListe.get(indexLecture!!)
             }
 
         }
         catch (e : Exception){
 
-            chanson = SingletonListeMusique.singletonListe.get(position)
+            chanson = SingletonListeMusique.singletonListe.get(indexLecture!!)
 
         }
 
@@ -305,7 +354,7 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         }
 
         player?.prepare()
-        player?.seekTo(position, 0)
+        player?.seekTo(indexLecture!!, 0)
         champChanson.text = chanson!!.title
         champArtiste.text = chanson!!.artist
         mettreSurPause()
@@ -315,10 +364,10 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
             player!!.play()
             minuterie = Minuterie((tempsRestant*1000).toLong(), 1000)
             minuterie!!.start()
-            seekBar.max = tempsRestant
-            duree.text = (player!!.currentPosition/1000).toString()
+            seekBar.max = chanson!!.duration
+            duree.text = tempsChanson.toString()
             maxSeekBar.text = chanson!!.duration.toString()
-            seekBar.progress = (player!!.currentPosition/1000).toInt()
+            seekBar.progress = tempsChanson
         }else{
             player!!.play()
             minuterie = Minuterie((chanson!!.duration*1000).toLong(), 1000)
@@ -328,11 +377,9 @@ class MediaPlayerActivity : AppCompatActivity(), ObservateurChangement {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
+    override fun onPause() {
+        super.onPause()
         serealiserChanson()
-
         minuterie?.cancel()
         minuterie = null
         player?.release()

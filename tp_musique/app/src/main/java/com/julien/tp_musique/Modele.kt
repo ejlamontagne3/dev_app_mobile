@@ -11,7 +11,7 @@ class Modele (context: Context) : Sujet  {
 
     private var maMusique : ListeMusique? = null
     private var appuyerBoutonPlay : Boolean = false
-    private var obs: ObservateurChangement? = null // c'est un observateur, il pourrait en avoir plusieurs
+    private var obs: ObservateurChangement? = null // c'est un observateur
 
     // constructeur unique
     init {
